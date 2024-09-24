@@ -7,7 +7,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Fetch the source code from the GitHub repository
-                git url: "${GIT_REPO_URL}", branch: 'main'
+                git url: "${GIT_REPO_URL}", branch: 'master'
             }
         }
         stage('Build') {
