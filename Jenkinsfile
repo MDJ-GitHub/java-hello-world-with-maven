@@ -1,25 +1,34 @@
 pipeline {
-
     agent any
-
-    tools {
-        jdk 'JAVA_HOME'   // Ensure that 'JAVA_HOME' is defined in Jenkins Global Tool Configuration
-        maven 'M2_HOME'   // Ensure that 'M2_HOME' is defined in Jenkins Global Tool Configuration
+    environment {
+        GIT_REPO_URL = 'https://github.com/MDJ-GitHub/java-hello-world-with-maven.git/'
     }
-
     stages {
-
-        stage('GIT') {
+        stage('Checkout') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/hwafa/timesheetproject.git'
+                // Fetch the source code from the GitHub repository
+                git url: "${GIT_REPO_URL}", branch: 'master'
             }
         }
-
-        stage('Compile Stage') {
+        stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                // Build the project using Maven
+                sh 'mvn clean install'
             }
+        }
+        stage('Package') {
+            steps {
+                // Package the application (jar, war, etc.)
+                sh 'mvn package'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Build and packaging successful!'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
